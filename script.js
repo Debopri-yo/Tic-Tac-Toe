@@ -80,9 +80,12 @@ const DisplayController = (() => {
   function renderBoard(){
     const board=Gameboard.getBoard();
     for(let i=0;i<board.length;i++){
-     if(board[i]!=="") 
+     if(board[i]!==""){ 
       buttons[i].textContent=board[i];
-    } 
+     }else {
+       buttons[i].textContent=board[i];
+     }
+     } 
 }
 
 for (const button of buttons){
@@ -91,6 +94,11 @@ for (const button of buttons){
     GameController.playRound(index);
     renderBoard();
   });
+const newGame=document.getElementById("newGame")
+  newGame.addEventListener("click",()=>{
+  GameController.resetGame();
+  renderBoard();
+});  
 }
 return { renderBoard };
 })();
