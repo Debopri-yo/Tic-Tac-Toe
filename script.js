@@ -7,7 +7,6 @@ const Gameboard = (function () {
     const setMark = (index, mark) => {
         if (index >= 0 && index < 9 && board[index] === "") {
             board[index] = mark;
-        
             return true;
         }
         return false;   
@@ -30,7 +29,7 @@ const GameController = (function () {
     const getCurrentPlayer = () => currentPlayer;
     const resetGame = () => {
         Gameboard.resetBoard();
-        currentPlayer = p1;
+        currentPlayer = p1;round = 0;gameOver = false;
     };
     const checkDraw = () => {
         return round >= 9 && !gameOver;
@@ -59,11 +58,15 @@ const GameController = (function () {
     const playRound = (index) => {
         Gameboard.setMark(index, currentPlayer.mark);
         round++;
-        if (checkWin()) {
+        if(gameOver){
+            return;
+        }else if (checkWin()) {
             console.log(`${currentPlayer.name} wins!`);
+            gameOver=true;round=0;
             return true;
         }else if (checkDraw()) {
             console.log("It's a draw!");
+            gameOver=true;
             return true;
         }
         switchPlayer();
@@ -71,15 +74,23 @@ const GameController = (function () {
     }
     return { getCurrentPlayer, resetGame, playRound };
 })();
-GameController.resetGame();
-GameController.playRound(4); // X
-GameController.playRound(0); // O
-GameController.playRound(8); // X
-GameController.playRound(2); // O
-GameController.playRound(6); // X
-GameController.playRound(3); // O
-GameController.playRound(5); // X
-GameController.playRound(7); // O
-GameController.playRound(1); // X
-console.log(Gameboard.getBoard());
 
+const DisplayController = (() => {
+  const buttons=document.querySelectorAll('.buttons');
+  function renderBoard(){
+    const board=Gameboard.getBoard();
+    for(let i=0;i<board.length;i++){
+     if(board[i]!=="") 
+      buttons[i].textContent=board[i];
+    } 
+}
+
+for (const button of buttons){
+  button.addEventListener("click",()=>{
+   const index = button.dataset.index; 
+    GameController.playRound(index);
+    renderBoard();
+  });
+}
+return { renderBoard };
+})();
