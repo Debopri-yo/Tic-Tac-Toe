@@ -1,0 +1,13 @@
+.buttons{
+  height:70px;
+  width:70px;
+  border:1px solid black;
+  gap:5px;
+}
+#container{
+  height:216px;
+  width:210px;
+    border:1px solid black;
+    display:flex;
+  flex-wrap: wrap;
+}

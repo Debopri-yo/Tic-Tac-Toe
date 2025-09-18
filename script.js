@@ -31,7 +31,8 @@ const GameController = (function () {
         Gameboard.resetBoard();
         currentPlayer = p1;round = 0;gameOver = false;
     };
-    const checkDraw = () => {
+  const isGameOver = () => gameOver; 
+  const checkDraw = () => {
         return round >= 9 && !gameOver;
     }
     const checkWin = () => {
@@ -72,33 +73,30 @@ const GameController = (function () {
         switchPlayer();
         return false;      
     }
-    return { getCurrentPlayer, resetGame, playRound };
+    return { getCurrentPlayer, resetGame, playRound,isGameOver };
 })();
 
 const DisplayController = (() => {
   const buttons=document.querySelectorAll('.buttons');
   function renderBoard(){
     const board=Gameboard.getBoard();
-    for(let i=0;i<board.length;i++){
-     if(board[i]!==""){ 
-      buttons[i].textContent=board[i];
-     }else {
-       buttons[i].textContent=board[i];
-     }
-     } 
-}
-
+    const Over=GameController.isGameOver();
+    for (let i = 0; i < board.length; i++) {
+    buttons[i].textContent = board[i];
+    buttons[i].disabled = Over || board[i] !== "";  
+  }} 
+    
 for (const button of buttons){
   button.addEventListener("click",()=>{
    const index = button.dataset.index; 
     GameController.playRound(index);
     renderBoard();
   });
+}
 const newGame=document.getElementById("newGame")
   newGame.addEventListener("click",()=>{
   GameController.resetGame();
   renderBoard();
 });  
-}
 return { renderBoard };
 })();
